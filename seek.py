@@ -4,6 +4,7 @@ import yaml
 import logging
 import os
 
+
 def get_data(path_to_file, key, file_type):
     with open(path_to_file) as file:
         logging.info(f'Opened {path_to_file}')
@@ -12,6 +13,7 @@ def get_data(path_to_file, key, file_type):
         else:
             data = yaml.full_load(file)
     return data
+
 
 def main(path_to_file, key, file_type):
     logging.info(f'file_type before checking is {file_type}')
@@ -27,7 +29,8 @@ def main(path_to_file, key, file_type):
     logging.info(f'file_type after checking is {file_type}')
     data = get_data(path_to_file, key, file_type)
     logging.info(f'Successfully read data from {path_to_file}')
-    print(data[key]) # TODO: complex key
+    print(data[key])  # TODO: complex key
+
 
 if __name__ == "__main__":
     logging_level_var = os.environ.get('SEEK_LOGGING_LEVEL', 'DEBUG')
@@ -51,10 +54,14 @@ if __name__ == "__main__":
     logging.info(f'Initialised logger, logging level: {logging_level_var}')
 
     parser = argparse.ArgumentParser(description='seek.py: get value')
-    parser.add_argument('path_to_file', action='store', help='path to examined file')
+    parser.add_argument(
+        'path_to_file',
+        action='store',
+        help='path to examined file')
     parser.add_argument('key', action='store', help='key to seek for')
     parser.add_argument('-t', action='store', help='file_type: json, yaml')
 
     args = parser.parse_args()
-    logging.info(f'Parsed arguments, got args.key = {args.key}, args.t = {args.t}')
+    logging.info(
+        f'Parsed arguments, got args.key = {args.key}, args.t = {args.t}')
     main(args.path_to_file, args.key, args.t)
