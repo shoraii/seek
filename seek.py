@@ -5,6 +5,23 @@ import logging
 import os
 
 
+def get_key_list(key):
+    if key[0] == '[' and key[-1] == ']':
+        key = key[1:-1]
+    key = key.split(',')
+    for i in range(len(key)):
+        key[i] = key[i].strip()
+        if key[i].isdigit() or key[i].startswith('-') and key[1:].isdigit():
+            key[i] = int(key[i])
+        else:
+            key[i] = str(key[i])
+            if key[i][0] == '\'' or key[i][0] == '"':
+                key[i] = key[i][1:]
+            if key[i][-1] == '\'' or key[i][-1] == '"':
+                key[i] = key[i][:-1]
+    return key
+
+
 def get_data(path_to_file, key, file_type):
     with open(path_to_file) as file:
         logging.info(f'Opened {path_to_file}')
@@ -12,6 +29,12 @@ def get_data(path_to_file, key, file_type):
             data = json.load(file)
         else:
             data = yaml.full_load(file)
+    return data
+
+
+def get_value(data, key):
+    for key_element in key:
+        data = data[key_element]
     return data
 
 
@@ -27,9 +50,16 @@ def main(path_to_file, key, file_type):
         else:
             raise NameError
     logging.info(f'file_type after checking is {file_type}')
+
+    logging.info(f'Converting key argument to list...')
+    key_list = get_key_list(key)
+    logging.info(f'Converted key argument')
+
     data = get_data(path_to_file, key, file_type)
     logging.info(f'Successfully read data from {path_to_file}')
-    print(data[key])  # TODO: complex key
+
+    value = get_value(data, key_list)
+    print(value)
 
 
 if __name__ == "__main__":
