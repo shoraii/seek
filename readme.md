@@ -36,7 +36,7 @@ Example:
 
 `python seek.py example.json '["glossary", "GlossDiv", "title"]'`
 
-output
+`output:`
 
         INFO:root:Started seek.py
         INFO:root:Initialised logger, logging level: DEBUG
